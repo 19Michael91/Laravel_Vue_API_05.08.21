@@ -8,10 +8,17 @@
             </div>
 
             <input type="text"
-                     name=""
-                     class="api-input"
-                     v-model="name"
-                     placeholder="Organization Name">
+                   class="api-input"
+                   v-model="name"
+                   placeholder="Organization Name">
+
+            <div v-if="errors.description" class="error-message">
+                * {{errors.description[0]}}
+            </div>
+
+            <textarea class="api-textarea"
+                      v-model="description"
+                      placeholder="Organisation Description"></textarea>
 
             <div class="form-footer">
                 <button @click="createOrganisation" class="create-button">Create</button>
@@ -30,6 +37,7 @@
             return {
                 user: this.$store.state.user,
                 name: '',
+                description: '',
                 errors: ''
             };
         },
@@ -37,6 +45,7 @@
             createOrganisation(){
                 let data = {
                     name: this.name,
+                    description: this.description,
                 };
 
                 let headers = {
@@ -46,7 +55,8 @@
                 this.$axios.post(this.$conf.serverUrl + '/organisations', data, {headers})
                     .then((response) => {
                         this.$emit('addOrganisation');
-                        this.name = '';
+                        this.name         = '';
+                        this.description  = '';
                     })
                     .catch((error) => {
                         this.errors = error.response.data.message;
@@ -74,7 +84,7 @@
         padding: 15px 18px;
         font-size: 18px;
         margin-bottom: 16px;
-        height: 150px;
+        height: 80px;
         resize: none;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;

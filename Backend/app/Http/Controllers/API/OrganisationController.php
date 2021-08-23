@@ -4,28 +4,23 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\Interfaces\OrganisationRepositoryInterface;
+use App\Organisation;
+use Carbon\Carbon;
+use App\Http\Resources\OrganisationCollection;
+use App\Http\Resources\Organisation as OrganisationResource;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\OrganisationCreatedNotification;
 
 class OrganisationController extends Controller
 {
     /**
-     * Takes an instance of OrganisationRepositoryInterface as a value
-     *
-     * @var OrganisationRepositoryInterface
-     */
-    private $organisationRepository;
-
-    /**
      * Construct instance of OrganisationController.
      *
-     * @param OrganisationRepositoryInterface $organisationRepository
      * @return void
      */
-    public function __construct(OrganisationRepositoryInterface $organisationRepository)
+    public function __construct()
     {
         $this->middleware('auth:api');
-
-        $this->organisationRepository = $organisationRepository;
     }
 
     /**
@@ -36,7 +31,19 @@ class OrganisationController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->organisationRepository->index($request);
+        $organisations = Organisation::all();
+
+        if($request->has('subscribed')){
+            $organisations = $organisations->where('subscribed', '=',true);
+        }
+
+        if($request->has('trial')){
+            $organisations = $organisations->where('trial_end', '>=', Carbon::now()->toDateString());
+        }
+
+        return response(['success'   => true,
+                        'message'    => 'Organizations by query',
+                        'data'       => new OrganisationCollection($organisations->keyBy->id)], 200);
     }
 
     /**
@@ -47,6 +54,28 @@ class OrganisationController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->organisationRepository->store($request);
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'name'          => 'required|min:2|max:255|unique:organisations',
+            'description'   => 'required|min:4|max:255'
+        ]);
+
+        if($validator->fails()){
+            return  response(['success'   => false,
+                              'message'   => $validator->errors()], 400);
+
+        }
+
+        $data['user_id']  = auth()->id();
+        $data['trial_end'] = Carbon::now()->addDays(30);
+
+        $organisation = Organisation::create($data);
+
+        auth()->user()->notify(new OrganisationCreatedNotification($organisation));
+
+        return response(['success'   => true,
+            'message'    => 'Organisation created',
+            'data'       => new OrganisationResource($organisation)], 200);
     }
 }

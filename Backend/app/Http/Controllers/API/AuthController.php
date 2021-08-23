@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Interfaces\AuthRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\User;
@@ -12,24 +11,6 @@ use App\Http\Resources\User as UserResource;
 class AuthController extends Controller
 {
     /**
-     * Takes an instance of AuthRepositoryInterface as a value
-     *
-     * @var AuthRepositoryInterface
-     */
-    private $authRepository;
-
-    /**
-     * Construct instance of AuthController.
-     *
-     * @param AuthRepositoryInterface $authRepository
-     * @return void
-     */
-    public function __construct(AuthRepositoryInterface $authRepository)
-    {
-        $this->authRepository = $authRepository;
-    }
-
-    /**
      * User authorization
      *
      * @param Request $request
@@ -37,6 +18,32 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        return $this->authRepository->login($request);
+        $loginData = $request->all();
+
+        $validator = Validator::make($loginData, [
+            'email'     => 'email|required',
+            'password'  => 'required'
+        ]);
+
+        if($validator->fails()){
+            return  response(['success'   => false,
+                              'message'   => $validator->errors()], 400);
+        }
+
+        if($validator->fails()){
+            return  response(['success'   => false,
+                              'message'   => $request->errors()], 400);
+        }
+
+        if (!auth()->attempt($loginData)) {
+            return  response(['success'   => false,
+                              'message'   => ['credentials' => ['Invalid Credentials']]], 400);
+        }
+
+        auth()->user()->access_token = auth()->user()->createToken('authToken')->accessToken;
+
+        return response(['success'   => true,
+                         'message'   => 'User login',
+                         'data'      => new UserResource(auth()->user())], 200);
     }
 }
