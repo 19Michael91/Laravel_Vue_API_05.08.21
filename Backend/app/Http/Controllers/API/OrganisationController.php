@@ -57,7 +57,7 @@ class OrganisationController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name'          => 'required|min:2|max:255|unique:organisations',
+            'name'          => 'required|min:2|max:64|unique:organisations',
             'description'   => 'required|min:4|max:255'
         ]);
 

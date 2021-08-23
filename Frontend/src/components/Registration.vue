@@ -16,6 +16,20 @@
                v-model="email"
                placeholder="Email">
 
+        <div v-if="errors.name">
+            <ul>
+                <li v-for="message in errors.name" class="error-message">
+                    * {{message}}
+                </li>
+            </ul>
+        </div>
+
+        <input type="text"
+               name="email"
+               class="api-input"
+               v-model="name"
+               placeholder="Name">
+
         <div v-if="errors.password">
             <ul>
                 <li v-for="message in errors.password" class="error-message">
@@ -44,6 +58,7 @@
         data(){
             return {
                 email: '',
+                name: '',
                 password: '',
                 errors: '',
             };
@@ -52,17 +67,18 @@
             registration(){
                 let data = {
                     email: this.email,
+                    name: this.name,
                     password: this.password,
                 };
 
-                axios.post(this.$conf.serverUrl + '/register', data)
+                this.$axios.post(this.$conf.serverUrl + '/register', data)
                      .then((response) => {
                          if(response.data.data.access_token){
                              this.$store.state.user = response.data.data;
                              this.$router.push('/organisations');
                          }
                      })
-                     .catch((error) => {
+                     .catch((error) => {console.log(error);
                          this.errors = error.response.data.message;
                      });
             },
