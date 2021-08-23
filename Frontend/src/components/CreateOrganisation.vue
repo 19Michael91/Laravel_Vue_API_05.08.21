@@ -98,7 +98,7 @@
 
     .create-button {
         border: none;
-        background-color: blue;
+        background-color: #204cdc;
         color: white;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;

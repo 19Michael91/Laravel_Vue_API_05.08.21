@@ -33,8 +33,12 @@
              v-model="password"
              placeholder="Password">
 
-      <button @click="login"
-              class="login-button">Login</button>
+      <div class="login-footer">
+          <button @click="login"
+                  class="login-button">Login</button>
+
+          <router-link :to="'/registration'" class="register-button">Registration</router-link>
+      </div>
   </div>
 </template>
 
@@ -102,9 +106,14 @@
         text-align: center;
     }
 
+    .login-footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
     .login-button {
         border: none;
-        background-color: blue;
+        background-color: #204cdc;
         color: white;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -114,6 +123,21 @@
         font-weight: bold;
         border-radius: 7px;
         margin-top: 10px;
+    }
+
+    .register-button {
+        border: none;
+        background-color: #00bf49;
+        color: white;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: 8px 20px;
+        font-size: 19px;
+        font-weight: bold;
+        border-radius: 7px;
+        margin-top: 10px;
+        text-decoration: none;
     }
 
 </style>
