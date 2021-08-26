@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Http\Resources\User as UserResource;
+use App\Http\Requests\AuthRegistrationRequest;
+use App\Http\Requests\AuthLoginRequest;
 
 class AuthController extends Controller
 {
@@ -17,31 +19,16 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function register(AuthRegistrationRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email'     => 'email|required|unique:users',
-            'name'      => 'required|min:5|max:16|unique:users',
-            'password'  => 'required|min:8|max:16'
-        ]);
+        User::create($request->all());
 
-        if($validator->fails()){
-            return  response(['success'   => false,
-                              'message'   => $validator->errors()], 400);
-        }
+        auth()->attempt(['email'    => $request->email,
+                         'password' => $request->password]);
 
-        $registerData = ['email'       => $request->get('email'),
-                         'name'        => $request->get('name'),
-                         'password'    => bcrypt($request->get('password'))];
-
-        User::create($registerData);
-
-        auth()->attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ]);
-
-        auth()->user()->access_token = auth()->user()->createToken('authToken')->accessToken;
+        auth()->user()->access_token = auth()->user()
+                                             ->createToken('authToken')
+                                             ->accessToken;
 
         return response(['success'   => true,
                          'message'   => 'User created',
@@ -54,26 +41,16 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function login(AuthLoginRequest $request)
     {
-        $loginData = $request->all();
-
-        $validator = Validator::make($loginData, [
-            'email'     => 'email|required',
-            'password'  => 'required'
-        ]);
-
-        if($validator->fails()){
-            return  response(['success'   => false,
-                              'message'   => $validator->errors()], 400);
-        }
-
-        if (!auth()->attempt($loginData)) {
+        if (!auth()->attempt($request->all())) {
             return  response(['success'   => false,
                               'message'   => ['credentials' => ['Invalid Credentials']]], 400);
         }
 
-        auth()->user()->access_token = auth()->user()->createToken('authToken')->accessToken;
+        auth()->user()->access_token = auth()->user()
+                                             ->createToken('authToken')
+                                             ->accessToken;
 
         return response(['success'   => true,
                          'message'   => 'User login',

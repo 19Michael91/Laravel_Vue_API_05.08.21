@@ -57,6 +57,7 @@
                         this.$emit('addOrganisation');
                         this.name         = '';
                         this.description  = '';
+                        this.errors       = '';
                     })
                     .catch((error) => {
                         this.errors = error.response.data.message;
