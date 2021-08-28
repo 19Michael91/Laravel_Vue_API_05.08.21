@@ -4,41 +4,39 @@
             <h1>{{error}}</h1>
         </div>
         <div v-else>
-          <create-organisation @addOrganisation="allOrganisations"></create-organisation>
-            <div>
-                <div class="header">
-                    <h2 class="list-title">List of Organizations</h2>
-                    <select class="select-status"
-                            id="selectStatus"
-                            v-if="organisations"
-                            @change="selectStatus">
-                        <option selected value="all">All</option>
-                        <option value="subscribed">Subscribed</option>
-                        <option value="trial">Trial</option>
-                    </select>
-                </div>
-
-                <table class="table-organisations"
-                       v-if="organisations">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Subscribe</th>
-                            <th>User</th>
-                            <th>Trial</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="organisation in organisations" :key="organisation.id" >
-                            <td>{{organisation.name}}</td>
-                            <td>{{organisation.description}}</td>
-                            <td>{{organisation.subscribed ? 'Yes' : 'No'}}</td>
-                            <td>{{organisation.user.name}}</td>
-                            <td>{{organisation.trial_end}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <create-organisation @addOrganisation="allOrganisations"></create-organisation>
+            <div class="header">
+                <h2 class="list-title">List of Organizations</h2>
+                <select class="select-status"
+                        id="selectStatus"
+                        @change="selectStatus">
+                    <option selected value="all">All</option>
+                    <option value="subscribed">Subscribed</option>
+                    <option value="trial">Trial</option>
+                </select>
+            </div>
+            <table class="table-organisations" v-if="isSetOrganisations">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Subscribe</th>
+                        <th>User</th>
+                        <th>Trial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="organisation in organisations" :key="organisation.id" >
+                        <td>{{organisation.name}}</td>
+                        <td>{{organisation.description}}</td>
+                        <td>{{organisation.subscribed ? 'Yes' : 'No'}}</td>
+                        <td>{{organisation.user.name}}</td>
+                        <td>{{organisation.trial_end}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div v-else class="no-organisations-block">
+                <h2 class="no-organisations-string">There Is No Organisations Yet</h2>
             </div>
         </div>
     </div>
@@ -59,6 +57,11 @@
                 error: ''
             };
         },
+        computed: {
+            isSetOrganisations(){
+                return Object.keys(this.organisations).length > 0;
+            },
+        },
         methods: {
             allOrganisations(){
                 let headers = {
@@ -75,7 +78,7 @@
             },
             selectStatus(event) {
                 let params = {
-                        [event.target.value]: 1
+                    [event.target.value]: 1
                 };
 
                 let headers = {
@@ -143,17 +146,27 @@
     }
 
     table {
-      border-collapse:collapse;
-      border-spacing:0;
+        border-collapse:collapse;
+        border-spacing:0;
     }
 
     table tr {
-      border-bottom: 1px solid black;
+        border-bottom: 1px solid black;
     }
 
     table tr td {
-      word-break: break-all;
-      padding: 15px 0;
+        word-break: break-all;
+        padding: 15px 0;
+    }
+
+    .no-organisations-block {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .no-organisations-string {
+        display: inline-block;
     }
 
 </style>

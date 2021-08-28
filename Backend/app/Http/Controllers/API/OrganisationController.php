@@ -8,8 +8,8 @@ use App\Organisation;
 use Carbon\Carbon;
 use App\Http\Resources\OrganisationCollection;
 use App\Http\Resources\Organisation as OrganisationResource;
-use Illuminate\Support\Facades\Validator;
 use App\Notifications\OrganisationCreatedNotification;
+use App\Http\Requests\OrganisationStoreRequest;
 
 class OrganisationController extends Controller
 {
@@ -31,7 +31,7 @@ class OrganisationController extends Controller
      */
     public function index(Request $request)
     {
-        $organisations = Organisation::all();
+        $organisations = auth()->user()->organisations;
 
         if($request->has('subscribed')){
             $organisations = $organisations->where('subscribed', '=',true);
@@ -42,8 +42,8 @@ class OrganisationController extends Controller
         }
 
         return response(['success'   => true,
-                        'message'    => 'Organizations by query',
-                        'data'       => new OrganisationCollection($organisations->keyBy->id)], 200);
+                         'message'    => 'Organizations by query',
+                         'data'       => new OrganisationCollection($organisations->keyBy->id)], 200);
     }
 
     /**
@@ -52,30 +52,14 @@ class OrganisationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrganisationStoreRequest $request)
     {
-        $data = $request->all();
-
-        $validator = Validator::make($data, [
-            'name'          => 'required|min:2|max:64|unique:organisations',
-            'description'   => 'required|min:4|max:255'
-        ]);
-
-        if($validator->fails()){
-            return  response(['success'   => false,
-                              'message'   => $validator->errors()], 400);
-
-        }
-
-        $data['user_id']  = auth()->id();
-        $data['trial_end'] = Carbon::now()->addDays(30);
-
-        $organisation = Organisation::create($data);
+        $organisation = Organisation::create($request->all());
 
         auth()->user()->notify(new OrganisationCreatedNotification($organisation));
 
         return response(['success'   => true,
-            'message'    => 'Organisation created',
-            'data'       => new OrganisationResource($organisation)], 200);
+                         'message'   => 'Organisation created',
+                         'data'      => new OrganisationResource($organisation)], 200);
     }
 }
