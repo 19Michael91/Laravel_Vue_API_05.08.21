@@ -37,8 +37,9 @@
                             <button type="button"
                                     @click="deleteOrganisation(index)"
                                     class="delete-button">Delete</button>
-                            <button type="button"
-                                    class="update-button">Update</button>
+
+                            <router-link :to="{ name: 'editOrganisation', params: { organisation: organisation }}"
+                                         class="edit-button">Edit</router-link>
                         </td>
                     </tr>
                 </tbody>
@@ -102,7 +103,6 @@
                     });
             },
             deleteOrganisation(index){
-
                 let headers = {
                     Authorization: 'Bearer ' + this.user.access_token
                 };
@@ -194,7 +194,7 @@
         margin-top: 10px;
     }
 
-    .update-button {
+    .edit-button {
         border: none;
         background-color: #28a745;
         color: white;
@@ -205,6 +205,7 @@
         font-size: 16px;
         border-radius: 7px;
         margin-top: 10px;
+        text-decoration: none;
     }
 
     .no-organisations-block {

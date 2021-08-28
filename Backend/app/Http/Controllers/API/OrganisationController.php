@@ -10,6 +10,7 @@ use App\Http\Resources\OrganisationCollection;
 use App\Http\Resources\Organisation as OrganisationResource;
 use App\Notifications\OrganisationCreatedNotification;
 use App\Http\Requests\OrganisationStoreRequest;
+use App\Http\Requests\OrganisationUpdateRequest;
 
 class OrganisationController extends Controller
 {
@@ -63,8 +64,33 @@ class OrganisationController extends Controller
                          'data'      => new OrganisationResource($organisation)], 200);
     }
 
+    /**
+     * Update organisation.
+     *
+     * @param \App\Organisation $organisation
+     * @param  App\Http\Requests\OrganisationUpdateRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Organisation $organisation, OrganisationUpdateRequest $request)
+    {
+        $this->authorize('update', $organisation);
+
+        $organisation->update($request->all());
+
+        return response(['success'   => true,
+                         'message'   => 'Organizations updated'], 200);
+    }
+
+    /**
+     * Delete organisation.
+     *
+     * @param \App\Organisation $organisation
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Organisation $organisation)
     {
+        $this->authorize('update', $organisation);
+
         $organisation->delete();
 
         return response(['success'   => true,

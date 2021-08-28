@@ -2,7 +2,7 @@
 import Vue from "vue"
 import VueRouter from 'vue-router'
 import OrganisationList from './components/OrganisationsList'
-import CreateOrganisation from './components/CreateOrganisation'
+import UpdateOrganisation from './components/UpdateOrganisation'
 import Login from './components/Login'
 import Registration from './components/Registration'
 import NotFound from './components/NotFound'
@@ -27,6 +27,11 @@ export default new VueRouter({
 			path: '/organisations',
 			component: OrganisationList,
 		},
+    {
+      path: '/organisations/edit',
+      name: 'editOrganisation',
+      component: UpdateOrganisation,
+    },
     {
       path: '*',
       component: NotFound,

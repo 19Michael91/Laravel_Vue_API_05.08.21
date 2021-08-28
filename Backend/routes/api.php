@@ -18,4 +18,5 @@ Route::post('/register', 'Api\AuthController@register');
 Route::post('/login', 'Api\AuthController@login');
 Route::get('/organisations', 'Api\OrganisationController@index');
 Route::post('/organisations', 'Api\OrganisationController@store');
+Route::patch('/organisations/{organisation}', 'Api\OrganisationController@update');
 Route::delete('/organisations/{organisation}', 'Api\OrganisationController@destroy');
