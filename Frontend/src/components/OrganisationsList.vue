@@ -23,15 +23,23 @@
                         <th>Subscribe</th>
                         <th>User</th>
                         <th>Trial</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="organisation in organisations" :key="organisation.id" >
+                    <tr v-for="(organisation, index) in organisations" :key="organisation.id" >
                         <td>{{organisation.name}}</td>
                         <td>{{organisation.description}}</td>
                         <td>{{organisation.subscribed ? 'Yes' : 'No'}}</td>
                         <td>{{organisation.user.name}}</td>
                         <td>{{organisation.trial_end}}</td>
+                        <td>
+                            <button type="button"
+                                    @click="deleteOrganisation(index)"
+                                    class="delete-button">Delete</button>
+                            <button type="button"
+                                    class="update-button">Update</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -48,7 +56,7 @@
     export default {
         name: 'organisations-list',
         components: {
-            CreateOrganisation
+            CreateOrganisation,
         },
         data(){
             return {
@@ -59,7 +67,7 @@
         },
         computed: {
             isSetOrganisations(){
-                return Object.keys(this.organisations).length > 0;
+                return this.organisations.length > 0;
             },
         },
         methods: {
@@ -92,7 +100,21 @@
                     .catch((error) => {
                         this.error = error.response.data.message;
                     });
-            }
+            },
+            deleteOrganisation(index){
+
+                let headers = {
+                    Authorization: 'Bearer ' + this.user.access_token
+                };
+
+                this.$axios.delete(this.$conf.serverUrl + '/organisations/' + this.organisations[index].id, {headers})
+                           .then((response) => {
+                               this.organisations.splice(index, 1);
+                           })
+                           .catch((errors) => {
+                               console.log(errors);
+                           });
+            },
         },
         beforeCreate() {
             if(!this.$store.state.user.access_token){
@@ -157,6 +179,32 @@
     table tr td {
         word-break: break-all;
         padding: 15px 0;
+    }
+
+    .delete-button {
+        border: none;
+        background-color: #dc3545;
+        color: white;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: 8px 12px;
+        font-size: 16px;
+        border-radius: 7px;
+        margin-top: 10px;
+    }
+
+    .update-button {
+        border: none;
+        background-color: #28a745;
+        color: white;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: 8px 12px;
+        font-size: 16px;
+        border-radius: 7px;
+        margin-top: 10px;
     }
 
     .no-organisations-block {

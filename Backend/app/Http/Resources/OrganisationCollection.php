@@ -15,7 +15,7 @@ class OrganisationCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'organisations' => $this->collection,
+            'organisations' => $this->collection->toArray(),
         ];
     }
 }

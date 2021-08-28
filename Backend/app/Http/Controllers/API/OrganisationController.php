@@ -42,8 +42,8 @@ class OrganisationController extends Controller
         }
 
         return response(['success'   => true,
-                         'message'    => 'Organizations by query',
-                         'data'       => new OrganisationCollection($organisations->keyBy->id)], 200);
+                         'message'   => 'Organizations by query',
+                         'data'      => new OrganisationCollection($organisations->keyBy->id)], 200);
     }
 
     /**
@@ -61,5 +61,13 @@ class OrganisationController extends Controller
         return response(['success'   => true,
                          'message'   => 'Organisation created',
                          'data'      => new OrganisationResource($organisation)], 200);
+    }
+
+    public function destroy(Organisation $organisation)
+    {
+        $organisation->delete();
+
+        return response(['success'   => true,
+                         'message'   => 'Organizations deleted'], 200);
     }
 }

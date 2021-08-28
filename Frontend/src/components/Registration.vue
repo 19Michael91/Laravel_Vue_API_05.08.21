@@ -125,7 +125,7 @@
 
     .registration-button {
         border: none;
-        background-color: #204cdc;
+        background-color: #007bff;
         color: white;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -139,7 +139,7 @@
 
     .back-button{
         border: none;
-        background-color: #00bf49;
+        background-color: #28a745;
         color: white;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
