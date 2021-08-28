@@ -89,7 +89,7 @@ class OrganisationController extends Controller
      */
     public function destroy(Organisation $organisation)
     {
-        $this->authorize('update', $organisation);
+        $this->authorize('delete', $organisation);
 
         $organisation->delete();
 
