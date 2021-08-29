@@ -15,7 +15,8 @@
                     <option value="trial">Trial</option>
                 </select>
             </div>
-            <table class="table-organisations" v-if="isSetOrganisations">
+            <table v-if="isSetOrganisation"
+                   class="table-organisations">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -63,12 +64,13 @@
             return {
                 user: this.$store.state.user,
                 organisations: '',
+                isSetOrganisation: true,
                 error: ''
             };
         },
-        computed: {
-            isSetOrganisations(){
-                return this.organisations.length > 0;
+        watch: {
+            organisations() {
+                this.isSetOrganisation = this.organisations.length > 0;
             },
         },
         methods: {
