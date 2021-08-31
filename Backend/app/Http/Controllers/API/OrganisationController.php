@@ -110,7 +110,7 @@ class OrganisationController extends Controller
         $organisation->update(['subscribed' => !$organisation->subscribed]);
 
         return response(['success'   => true,
-                         'message'   => 'Organisation created',
+                         'message'   => 'Organisation changed subscription',
                          'data'      => new OrganisationResource($organisation)], 200);
     }
 }
