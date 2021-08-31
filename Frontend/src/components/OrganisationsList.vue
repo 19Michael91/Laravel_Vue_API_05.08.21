@@ -64,14 +64,13 @@
             return {
                 user: this.$store.state.user,
                 organisations: '',
-                isSetOrganisation: true,
                 error: ''
             };
         },
-        watch: {
-            organisations() {
-                this.isSetOrganisation = this.organisations.length > 0;
-            },
+        computed: {
+            isSetOrganisation(){
+                return this.organisations.length > 0;
+            }
         },
         methods: {
             allOrganisations(){

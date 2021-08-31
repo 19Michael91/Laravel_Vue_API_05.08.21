@@ -32,7 +32,7 @@ class OrganisationController extends Controller
      */
     public function index(Request $request)
     {
-        $organisations = auth()->user()->organisations;
+        $organisations = auth()->user()->organisations();
 
         if($request->has('subscribed')){
             $organisations = $organisations->where('subscribed', '=',true);
@@ -44,7 +44,7 @@ class OrganisationController extends Controller
 
         return response(['success'   => true,
                          'message'   => 'Organizations by query',
-                         'data'      => new OrganisationCollection($organisations->keyBy->id)], 200);
+                         'data'      => new OrganisationCollection($organisations->get()->keyBy->id)], 200);
     }
 
     /**
