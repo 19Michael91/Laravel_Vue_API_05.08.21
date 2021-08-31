@@ -10,7 +10,7 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$conf = conf;
 Vue.prototype.$user = '';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
@@ -19,4 +19,4 @@ new Vue({
   template: '<App/>',
   router,
   store
-})
+});

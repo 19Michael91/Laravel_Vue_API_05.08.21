@@ -21,7 +21,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>Subscribe</th>
+                        <th>Subscribed</th>
                         <th>User</th>
                         <th>Trial</th>
                         <th>Actions</th>
@@ -31,16 +31,25 @@
                     <tr v-for="(organisation, index) in organisations" :key="organisation.id" >
                         <td>{{organisation.name}}</td>
                         <td>{{organisation.description}}</td>
-                        <td>{{organisation.subscribed ? 'Yes' : 'No'}}</td>
+                        <td>
+                            <div :class="organisation.subscribed ? 'sub-status' : 'unsub-status'">
+                                {{organisation.subscribed ? 'Yes' : 'No'}}
+                            </div>
+                            <button type="button"
+                                    @click="subscriptionToggle(index)"
+                                    :class="organisation.subscribed ? 'unsub-button' : 'sub-button'">
+                                {{organisation.subscribed ? 'Unsubscribe' : 'Subscribe'}}
+                            </button>
+                        </td>
                         <td>{{organisation.user.name}}</td>
                         <td>{{organisation.trial_end}}</td>
                         <td>
                             <button type="button"
                                     @click="deleteOrganisation(index)"
-                                    class="delete-button">Delete</button>
+                                    class="danger-button">Delete</button>
 
                             <router-link :to="{ name: 'editOrganisation', params: { organisation: organisation }}"
-                                         class="edit-button">Edit</router-link>
+                                         class="success-button">Edit</router-link>
                         </td>
                     </tr>
                 </tbody>
@@ -116,6 +125,21 @@
                                console.log(errors);
                            });
             },
+            subscriptionToggle(index){
+                let headers = {
+                    Authorization: 'Bearer ' + this.user.access_token
+                };
+
+                this.$axios.post(this.$conf.serverUrl + '/organisations/'
+                                                      + this.organisations[index].id
+                                                      + '/subscription', null, {headers})
+                    .then((response) => {
+                        this.organisations[index].subscribed = response.data.data.subscribed;
+                    })
+                    .catch((errors) => {
+                        console.log(errors);
+                    });
+            },
         },
         beforeCreate() {
             if(!this.$store.state.user.access_token){
@@ -182,9 +206,11 @@
         padding: 15px 0;
     }
 
-    .delete-button {
+    .danger-button {
+        width: max-content;
+        display: inline-block;
         border: none;
-        background-color: #dc3545;
+        background-color: #fb1700;
         color: white;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -195,7 +221,9 @@
         margin-top: 10px;
     }
 
-    .edit-button {
+    .success-button {
+        width: max-content;
+        display: inline-block;
         border: none;
         background-color: #28a745;
         color: white;
@@ -207,6 +235,45 @@
         border-radius: 7px;
         margin-top: 10px;
         text-decoration: none;
+    }
+
+    .sub-button {
+        width: max-content;
+        display: inline-block;
+        border: none;
+        background-color: #17a2b8;
+        color: white;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: 8px 8px;
+        font-size: 13px;
+        border-radius: 7px;
+        margin-top: 10px;
+        text-decoration: none;
+    }
+
+    .unsub-button {
+        width: max-content;
+        display: inline-block;
+        border: none;
+        background-color: #ef5665;
+        color: white;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: 8px 8px;
+        font-size: 12px;
+        border-radius: 7px;
+        margin-top: 10px;
+    }
+
+    .sub-status {
+        color: #04a7c1;
+    }
+
+    .unsub-status {
+        color: #ef5665;
     }
 
     .no-organisations-block {

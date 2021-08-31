@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +19,4 @@ Route::get('/organisations', 'Api\OrganisationController@index');
 Route::post('/organisations', 'Api\OrganisationController@store');
 Route::patch('/organisations/{organisation}', 'Api\OrganisationController@update');
 Route::delete('/organisations/{organisation}', 'Api\OrganisationController@destroy');
+Route::post('/organisations/{organisation}/subscription', 'Api\OrganisationController@subscriptionToggle');

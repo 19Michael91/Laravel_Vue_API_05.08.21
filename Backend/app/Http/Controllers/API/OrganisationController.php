@@ -96,4 +96,21 @@ class OrganisationController extends Controller
         return response(['success'   => true,
                          'message'   => 'Organizations deleted'], 200);
     }
+
+    /**
+     * Toggle organisation subscription.
+     *
+     * @param Organisation $organisation
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function subscriptionToggle(Organisation $organisation)
+    {
+        $this->authorize('update', $organisation);
+
+        $organisation->update(['subscribed' => !$organisation->subscribed]);
+
+        return response(['success'   => true,
+                         'message'   => 'Organisation created',
+                         'data'      => new OrganisationResource($organisation)], 200);
+    }
 }
