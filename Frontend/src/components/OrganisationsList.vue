@@ -197,6 +197,12 @@
         border-spacing:0;
     }
 
+    thead {
+        position: sticky;
+        top: 0;
+        background-color: #c7e6ec;
+    }
+
     table tr {
         border-bottom: 1px solid black;
     }
