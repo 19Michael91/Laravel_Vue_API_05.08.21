@@ -1,5 +1,8 @@
 <template>
     <div>
+        <h2 class="user-name">
+            Hello {{$store.state.user.name}}
+        </h2>
         <div v-if="user.access_token">
             <h2 class="create-title">Create New Organisation</h2>
 
@@ -68,6 +71,11 @@
 </script>
 
 <style scoped>
+
+    .user-name {
+        display: flex;
+        justify-content: flex-end;
+    }
 
     .api-input {
         width: 100%;
