@@ -4,7 +4,8 @@
             <h1>{{error}}</h1>
         </div>
         <div v-else>
-            <create-organisation @addOrganisation="allOrganisations"></create-organisation>
+            <create-organisation @addOrganisation="allOrganisations"
+                                 @createFlash="createFlash"></create-organisation>
             <div class="header">
                 <h2 class="list-title">List of Organizations</h2>
                 <select class="select-status"
@@ -58,16 +59,20 @@
                 <h2 class="no-organisations-string">There Is No Organisations Yet</h2>
             </div>
         </div>
+
+        <flash></flash>
     </div>
 </template>
 
 <script>
     import CreateOrganisation from './CreateOrganisation'
+    import Flash from './Flash'
 
     export default {
         name: 'organisations-list',
         components: {
             CreateOrganisation,
+            Flash
         },
         data(){
             return {
@@ -120,9 +125,11 @@
                 this.$axios.delete(this.$conf.serverUrl + '/organisations/' + this.organisations[index].id, {headers})
                            .then((response) => {
                                this.organisations.splice(index, 1);
+                               this.$emit('flash', response.data);
                            })
                            .catch((errors) => {
                                console.log(errors);
+                               this.$emit('flash', errors);
                            });
             },
             subscriptionToggle(index){
@@ -135,10 +142,17 @@
                                                       + '/subscription', null, {headers})
                     .then((response) => {
                         this.organisations[index].subscribed = response.data.data.subscribed;
+                        this.$emit('flash', response.data);
                     })
                     .catch((errors) => {
                         console.log(errors);
+                        this.$emit('flash', errors);
                     });
+            },
+            createFlash(data){
+                data.message = data.success === true ? data.message
+                                                     : 'Organization creation error';
+                this.$emit('flash', data);
             },
         },
         beforeCreate() {

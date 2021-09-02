@@ -61,9 +61,11 @@
                         this.name         = '';
                         this.description  = '';
                         this.errors       = '';
+                        this.$emit('createFlash', response.data);
                     })
                     .catch((error) => {
                         this.errors = error.response.data.message;
+                        this.$emit('createFlash', error);
                     });
             },
         },
