@@ -35,7 +35,7 @@
 
 <script>
     export default {
-        name: 'create-organisation',
+        name: 'update-organisation',
         data(){
             return {
                 user: this.$store.state.user,
@@ -44,6 +44,11 @@
                 description: this.$route.params.organisation.description,
                 errors: ''
             };
+        },
+        beforeCreate() {
+            if(!this.$store.state.user.access_token){
+                this.$router.push('/login');
+            }
         },
         methods: {
             updateOrganisation(){
@@ -63,12 +68,6 @@
                     .catch((error) => {
                         this.errors = error.response.data.message;
                     });
-            },
-            beforeCreate() {
-                if(!this.$store.state.user.access_token){
-                    this.$router.push('/login');
-                }
-
             },
         },
     }

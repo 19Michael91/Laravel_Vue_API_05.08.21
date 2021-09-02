@@ -1,6 +1,6 @@
 <template>
     <div id="app" class="container" v-cloak>
-        <img src="./assets/logo.png" class="logo">
+        <img id="logo" src="./assets/logo.png" class="logo">
         <router-view></router-view>
     </div>
 </template>

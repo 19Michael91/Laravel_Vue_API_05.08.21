@@ -81,6 +81,14 @@
                 error: ''
             };
         },
+        beforeCreate() {
+            if(!this.$store.state.user.access_token){
+                this.$router.push('/login');
+            }
+        },
+        created() {
+            this.allOrganisations();
+        },
         computed: {
             isSetOrganisation(){
                 return this.organisations.length > 0;
@@ -128,7 +136,6 @@
                                this.$emit('flash', response.data);
                            })
                            .catch((errors) => {
-                               console.log(errors);
                                this.$emit('flash', errors);
                            });
             },
@@ -145,7 +152,6 @@
                         this.$emit('flash', response.data);
                     })
                     .catch((errors) => {
-                        console.log(errors);
                         this.$emit('flash', errors);
                     });
             },
@@ -155,14 +161,6 @@
                 this.$emit('flash', data);
             },
         },
-        beforeCreate() {
-            if(!this.$store.state.user.access_token){
-                this.$router.push('/login');
-            }
-        },
-        created() {
-            this.allOrganisations();
-        }
     }
 </script>
 

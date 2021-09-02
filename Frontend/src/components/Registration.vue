@@ -78,7 +78,7 @@
                              this.$router.push('/organisations');
                          }
                      })
-                     .catch((error) => {console.log(error);
+                     .catch((error) => {
                          this.errors = error.response.data.message;
                      });
             },
