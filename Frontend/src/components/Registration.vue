@@ -65,6 +65,8 @@
         },
         methods: {
             registration(){
+                this.$rotation.startLogoRotation('logo');
+
                 let data = {
                     email: this.email,
                     name: this.name,
@@ -77,9 +79,11 @@
                              this.$store.state.user = response.data.data;
                              this.$router.push('/organisations');
                          }
+                         this.$rotation.stopLogoRotation('logo');
                      })
                      .catch((error) => {
                          this.errors = error.response.data.message;
+                         this.$rotation.stopLogoRotation('logo');
                      });
             },
         },

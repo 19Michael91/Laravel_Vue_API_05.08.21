@@ -126,6 +126,8 @@
                     });
             },
             deleteOrganisation(index){
+                this.$rotation.startLogoRotation('logo');
+
                 let headers = {
                     Authorization: 'Bearer ' + this.user.access_token
                 };
@@ -134,12 +136,16 @@
                            .then((response) => {
                                this.organisations.splice(index, 1);
                                this.$emit('flash', response.data);
+                               this.$rotation.stopLogoRotation('logo');
                            })
                            .catch((errors) => {
                                this.$emit('flash', errors);
+                               this.$rotation.stopLogoRotation('logo');
                            });
             },
             subscriptionToggle(index){
+                this.$rotation.startLogoRotation('logo');
+
                 let headers = {
                     Authorization: 'Bearer ' + this.user.access_token
                 };
@@ -150,9 +156,11 @@
                     .then((response) => {
                         this.organisations[index].subscribed = response.data.data.subscribed;
                         this.$emit('flash', response.data);
+                        this.$rotation.stopLogoRotation('logo');
                     })
                     .catch((errors) => {
                         this.$emit('flash', errors);
+                        this.$rotation.stopLogoRotation('logo');
                     });
             },
             createFlash(data){

@@ -46,6 +46,8 @@
         },
         methods: {
             createOrganisation(){
+                this.$rotation.startLogoRotation('logo');
+
                 let data = {
                     name: this.name,
                     description: this.description,
@@ -62,10 +64,12 @@
                         this.description  = '';
                         this.errors       = '';
                         this.$emit('createFlash', response.data);
+                        this.$rotation.stopLogoRotation('logo');
                     })
                     .catch((error) => {
                         this.errors = error.response.data.message;
                         this.$emit('createFlash', error);
+                        this.$rotation.stopLogoRotation('logo');
                     });
             },
         },

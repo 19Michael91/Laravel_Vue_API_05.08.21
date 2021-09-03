@@ -52,6 +52,8 @@
         },
         methods: {
             updateOrganisation(){
+                this.$rotation.startLogoRotation('logo');
+
                 let data = {
                     name: this.name,
                     description: this.description,
@@ -64,9 +66,11 @@
                 this.$axios.patch(this.$conf.serverUrl + '/organisations/' + this.id, data, {headers})
                     .then((response) => {
                         this.$router.push('/organisations');
+                        this.$rotation.stopLogoRotation('logo');
                     })
                     .catch((error) => {
                         this.errors = error.response.data.message;
+                        this.$rotation.stopLogoRotation('logo');
                     });
             },
         },
