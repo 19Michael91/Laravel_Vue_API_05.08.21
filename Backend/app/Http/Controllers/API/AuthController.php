@@ -48,6 +48,8 @@ class AuthController extends Controller
                               'message'   => ['credentials' => ['Invalid Credentials']]], 400);
         }
 
+        auth()->user()->deleteTokens('authToken');
+
         auth()->user()->access_token = auth()->user()
                                              ->createToken('authToken')
                                              ->accessToken;

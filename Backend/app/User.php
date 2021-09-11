@@ -52,10 +52,25 @@ class User extends Authenticatable
     /**
      * Set the user's password.
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function setPasswordAttribute($value){
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    /**
+     * Delete tokens by name.
+     *
+     * @param string $tokenName
+     * @return void
+     */
+    public function deleteTokens($tokenName)
+    {
+        $tokens = $this->tokens()->where('name', $tokenName);
+
+        if($tokens->get()){
+            $tokens->delete();
+        }
     }
 }
